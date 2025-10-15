@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Recommender</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
+
+    <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-2xl">
+        <h1 class="text-3xl font-bold text-center mb-2 text-cyan-400">E-commerce Recommender</h1>
+        <p class="text-center text-gray-400 mb-8">Enter a user name (e.g., Yash, Mahak, Palak) to get recommendations.</p>
+
+        <div class="flex items-center gap-4 mb-8">
+            <input type="text" id="userInput" class="w-full bg-gray-700 text-white rounded-lg py-3 px-4 focus:outline-none focus:border-cyan-500" placeholder="Enter User Name...">
+            <button id="getRecsButton" class="bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-3 px-6 rounded-lg">
+                Get Recommendations
+            </button>
+        </div>
+
+        <div id="results" class="space-y-4">
+            <div id="loading" class="hidden text-center"><p>Fetching recommendations...</p></div>
+            <div id="error" class="hidden text-center bg-red-900/50 border border-red-500 text-red-300 px-4 py-3 rounded-lg"><p id="errorMessage"></p></div>
+            <div id="recommendations" class="space-y-4"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- JAVASCRIPT LOGIC ---
+
+        // Get references to the HTML elements we need to interact with.
+        const getRecsButton = document.getElementById('getRecsButton');
+        const userInput = document.getElementById('userInput');
+        const recommendationsDiv = document.getElementById('recommendations');
+        const loadingDiv = document.getElementById('loading');
+        const errorDiv = document.getElementById('error');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // This is the main function that gets called when the user clicks the button.
+        async function fetchRecommendations() {
+            const userName = userInput.value;
+            if (!userName) {
+                errorMessage.textContent = "Please enter a User Name.";
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            // Reset the UI to a clean state for the new request.
+            recommendationsDiv.innerHTML = '';
+            errorDiv.classList.add('hidden');
+            loadingDiv.classList.remove('hidden');
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/recommendations/${userName}`);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                displayRecommendations(data.recommendations);
+
+            } catch (e) { // <<< THE TYPO WAS HERE. THE PERIOD IS GONE.
+                // If anything goes wrong (network error, server error), this block runs.
+                errorMessage.textContent = `Failed to fetch recommendations: ${e.message}`;
+                errorDiv.classList.remove('hidden');
+            } finally {
+                // This block runs regardless of whether the request succeeded or failed.
+                loadingDiv.classList.add('hidden');
+            }
+        }
+
+        // This function takes the list of recommendation objects and builds the HTML to display them.
+        function displayRecommendations(recs) {
+            if (recs.length === 0) {
+                errorMessage.textContent = "No recommendations found for this user.";
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            recs.forEach(rec => {
+                const card = `
+                    <div class="bg-gray-700/50 p-6 rounded-xl border border-gray-600">
+                        <h2 class="text-xl font-bold text-cyan-400">${rec.name}</h2>
+                        <p class="text-sm text-gray-500 mb-2">${rec.category}</p>
+                        <p class="text-gray-300 mb-4">${rec.description}</p>
+                        <div class="bg-gray-800 p-3 rounded-lg border border-gray-600">
+                           <p class="text-sm font-semibold text-gray-400">Why you might like this:</p>
+                           <p class="text-cyan-300">${rec.explanation}</p>
+                        </div>
+                    </div>
+                `;
+                recommendationsDiv.innerHTML += card;
+            });
+        }
+
+        // --- EVENT LISTENERS ---
+        getRecsButton.addEventListener('click', fetchRecommendations);
+        userInput.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') fetchRecommendations();
+        });
+    </script>
+</body>
+</html>
