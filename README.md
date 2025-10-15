@@ -46,7 +46,7 @@ Backend will start at http://127.0.0.1:8000
 4️⃣ Open Frontend
 
 Open frontend.html in your browser.
-Enter any username (e.g., Yash, Palak, Abhishek) → Click “Get Recommendations”.
+Enter any username (e.g., Anjasi, Palak, Giriraj) → Click “Get Recommendations”.
 
 You’ll see:
 
