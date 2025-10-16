@@ -67,3 +67,8 @@ GET /recommendations/{username}
 🧩 Credits
 
 Developed with ❤️ using FastAPI, Scikit-learn, and OpenRouter LLMs.
+
+Demo Video Link:
+https://drive.google.com/file/d/12VHCe6Enoaq1_EKHGcrCfEPbACXvneSj/view?usp=sharing
+
+THANK YOU
