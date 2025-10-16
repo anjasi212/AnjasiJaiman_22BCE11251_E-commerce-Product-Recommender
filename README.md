@@ -24,7 +24,7 @@ Frontend	HTML, Tailwind CSS, JavaScript
 Database	SQLite
 🚀 Quickstart
 1️⃣ Clone Repository
-git clone https://github.com/Yash0951/product-recommender-api.git
+git clone https: https://github.com/anjasi212/AnjasiJaiman_22BCE11251_E-commerce-Product-Recommender.git
 cd product-recommender-api
 
 2️⃣ Set Up Environment
