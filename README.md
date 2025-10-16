@@ -25,7 +25,7 @@ Database	SQLite
 🚀 Quickstart
 1️⃣ Clone Repository
 git clone https: https://github.com/anjasi212/AnjasiJaiman_22BCE11251_E-commerce-Product-Recommender.git
-cd product-recommender-api
+cd AnjasiJaiman_22BCE11251_E-commerce-Product-Recommender
 
 2️⃣ Set Up Environment
 cp .env.example .env
